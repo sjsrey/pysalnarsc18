@@ -58,7 +58,7 @@ Extract the downloaded zip file to a working directory.
 We will be using a number of Python packages for geospatial analysis.
 
 
-An easy way to install all of these packages is to use a Python distribution such as [Anaconda](https://www.anaconda.com/download/#macos). In this workshop we will be using **Python 2.7** so please download that version of Anaconda.
+An easy way to install all of these packages is to use a Python distribution such as [Anaconda](https://www.anaconda.com/download/#macos). In this workshop we will be using **Python 3.7** so please download that version of Anaconda.
 
 ![anaconda](figs/readmefigs/anaconda.png)
 
@@ -80,11 +80,11 @@ Once this completes, you can activate the workshop environment with:
 
 * on Mac, Linux
 ```bash
-source activate workshop
+conda activate workshop18
 ```
 * on Windows:
 ```bash
-activate workshop
+activate workshop18
 ```
 
 Next, you will want to test your installation with:
