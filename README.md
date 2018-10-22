@@ -9,7 +9,7 @@
 ![journeys2018](figs/readmefigs/routes2018.png)
 
 
-![journeys2016-18](figs/readmefigs/routes2016-18.png)
+![journeys2016-18](figs/readmefigs/quad.png)
 ---
 
 This repository contains the materials and instructions for the PySAL workshop at [NARSC 2018](http://www.narsc.org/newsite/conference/workshops-and-tutorials/).
