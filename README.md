@@ -5,10 +5,6 @@
 - [Sergio Rey](http://sergerey.org) - University of California, Riverside
 - [Wei Kang](http://spatial.ucr.edu/peopleKang.html) - University of California, Riverside
 
-
-![journeys2018](figs/readmefigs/routes2018.png)
-
-
 ![journeys2016-18](figs/readmefigs/quad.png)
 ---
 
