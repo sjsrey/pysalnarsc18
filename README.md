@@ -69,7 +69,7 @@ Once you have downloaded Anaconda, start a terminal and navigate to the director
 Once we have done that, run:
 
 ```bash
-conda-env create -f workshop.yml
+conda-env create -f workshop18.yml
 ```
 
 This will build a conda environment that sandboxes the installation of the required packages for this workshop so we don't break anything in your computer's system Python (if it has one).

@@ -5,7 +5,7 @@ channels:
   - bokeh
 
 dependencies:
-  - python=3
+  - python=3.6
   - pip
   - bokeh
   - cartopy
