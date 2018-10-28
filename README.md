@@ -62,7 +62,13 @@ An easy way to install all of these packages is to use a Python distribution suc
 
 ![anaconda](figs/readmefigs/anaconda.png)
 
-Once you have downloaded Anaconda, start a terminal and navigate to the directory of the downloaded/ cloned materials. For example, if the materials now live in the directory ```/Users/weikang/Downloads/pysalnarsc18-master```, you need to navigate to that directory from the terminal (using command ```cd```):
+
+On windows, all our work will begin from an anaconda prompt, which you can start as follows:
+
+
+![anacondaprompt](figs/readmefigs/anacondastartwin.png)
+
+Start a terminal and navigate to the directory of the downloaded/ cloned materials. For example, if the materials now live in the directory ```/Users/weikang/Downloads/pysalnarsc18-master```, you need to navigate to that directory from the terminal (using command ```cd```):
 
 ![directory](figs/readmefigs/directory.png)
 
@@ -108,3 +114,16 @@ You should also see a new file in the current directory called `inc.png` that co
 ![incmap](figs/readmefigs/inc.png)
 
 If you do see the above, you are ready for the tutorial. If not, please contact either of us for help.
+
+## Troubleshooting
+
+
+If you encounter the following error when starting jupyterlab:
+```bash
+FileNotFoundError: [WinError 2] The system cannot find the file specified
+```
+A solution is to issue the following command in the anaconda prompt:
+```bash
+ python -m ipykernel install --user
+```
+
