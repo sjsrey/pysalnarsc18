@@ -58,13 +58,12 @@ Extract the downloaded zip file to a working directory.
 We will be using a number of Python packages for geospatial analysis.
 
 
-An easy way to install all of these packages is to use a Python distribution such as [Anaconda](https://www.anaconda.com/download/#macos). In this workshop we will be using **Python 3.7** so please download that version of Anaconda.
+An easy way to install all of these packages is to use a Python distribution such as [Anaconda](https://www.anaconda.com/download/#macos). In this workshop we will use anaconda to build an [environment](https://conda.io/docs/user-guide/tasks/manage-environments.html) for **Python 3.6**. It does not matter which version of anaconda is downloaded. We recommend installing Anaconda 3.7.
 
 ![anaconda](figs/readmefigs/anaconda.png)
 
 
 On windows, all our work will begin from an anaconda prompt, which you can start as follows:
-
 
 ![anacondaprompt](figs/readmefigs/anacondastartwin.png)
 
@@ -78,7 +77,7 @@ Once we have done that, run:
 conda-env create -f workshop18.yml
 ```
 
-This will build a conda environment that sandboxes the installation of the required packages for this workshop so we don't break anything in your computer's system Python (if it has one).
+This will build a conda python 3.6 environment that sandboxes the installation of the required packages for this workshop so we don't break anything in your computer's system Python (if it has one).
 
 This may take 10-15 minutes to complete depending on the speed of your network connection.
 
@@ -86,7 +85,7 @@ Once this completes, you can activate the workshop environment with:
 
 * on Mac, Linux
 ```bash
-conda activate workshop18
+source activate workshop18
 ```
 * on Windows:
 ```bash
@@ -102,7 +101,7 @@ You should see something like:
 ```bash
 [NbConvertApp] Converting notebook check_workshop.ipynb to html
 [NbConvertApp] Executing notebook with kernel: python3
-[NbConvertApp] Writing 386650 bytes to check_workshop.html
+[NbConvertApp] Writing 387717 bytes to check_workshop.html
 ```
 
 Open check_workshop.html in a browser, and scroll all the way down, you should see something like:
