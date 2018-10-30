@@ -101,7 +101,7 @@ You should see something like:
 ```bash
 [NbConvertApp] Converting notebook check_workshop.ipynb to html
 [NbConvertApp] Executing notebook with kernel: python3
-[NbConvertApp] Writing 387717 bytes to check_workshop.html
+[NbConvertApp] Writing 347535 bytes to check_workshop.html
 ```
 
 Open check_workshop.html in a browser, and scroll all the way down, you should see something like:

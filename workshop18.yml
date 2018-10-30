@@ -27,7 +27,6 @@ dependencies:
   - xlrd
   - xlsxwriter
   - pip:
-        - contextily
         - folium
         - geojson
         - palettable
