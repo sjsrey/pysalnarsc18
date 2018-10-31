@@ -34,4 +34,5 @@ dependencies:
         - esda
         - mapclassify
         - giddy
+        - inequality
         - datashader
