@@ -1,0 +1,87 @@
+# This file contains the order and numbering for all sections in the book.
+#
+# It is a sample TOC file to help you get started. Fill it out with entries
+# for your own content.
+#
+# Each entry has the following schema:
+#
+# - title: mytitle   # Title of chapter or section
+#   url: /myurl  # URL of section relative to the /content/ folder.
+#   sections:  # Contains a list of more entries that make up the chapter's sections
+#   not_numbered: true  # if the section shouldn't have a number in the sidebar
+#     (e.g. Introduction or appendices)
+#   expand_sections: true  # if you'd like the sections of this chapter to always
+#     be expanded in the sidebar.
+#   external: true  # Whether the URL is an external link or points to content in the book
+#
+# Below are some special values that trigger specific behavior:
+# - search: true  # Will provide a link to a search page
+# - divider: true  # Will insert a divider in the sidebar
+# - header: My Header  # Will insert a header with no link in the sidebar
+#
+# See the links below for an example.
+
+# Top-level page
+- title: Home
+  url: /intro
+  not_numbered: true
+
+# External link
+- title: GitHub repository
+  url:  https://github.com/sjsrey/pysalnarsc18
+  external: true
+  not_numbered: true
+
+# Adds a searchbar link
+- title: Search
+  search: true
+
+# Divider for meta-pages and content page
+- divider: true
+
+# Add a header and sample content section
+- header: Content
+
+
+# Python Primer
+- title: Python Primer
+  url: /primer/intro
+  sections:
+  - title: Jupyter Notebooks
+    url: /primer/00_notebook_intro
+  - title: Strings
+    url: /primer/01_strings
+  - title: Sequences
+    url: /primer/02_sequences
+  - title: Dictionaries
+    url: /primer/03_dictionaries
+  - title: Conditionals
+    url: /primer/04_conditionals
+
+# Geoprocessing and Visualization
+- title: Geoprocessing and Visualization
+  url: /processing/intro
+  sections:
+  - title: Geoprocessing spatial data
+    url: /processing/07_data_processing
+  - title: Geoprocessing Exercise
+    url: /processing/08_routes
+  - title: Geovisualization
+    url: /processing/09_geovisualization
+
+
+
+# Exploratory Spatial Data Analysis
+- title: Exploratory Spatial Data Analysis
+  url: /esda/intro
+  sections:
+  - title: Global Spatial Autocorrelation
+    url: /esda/13_global_texas
+  - title: Interactive Spatial Autocorrelation
+    url: /esda/12_sp_corr
+  - title: Local Autocorrelation Analysis
+    url: /esda/14_local_texas
+  - title: Spatial Dynamics Analytics
+    url: /esda/16_spatial_dynamics_analytics
+  - title: Spatial Dynamics Visualization
+    url: /esda/17_spatial_dynamics_visualization

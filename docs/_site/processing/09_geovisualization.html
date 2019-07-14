@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+
+  <title>Geovisualization</title>
+  <meta name="description" content="Choropleth Mapping">
+
+  <link rel="canonical" href="/YOUR%20URL//processing/09_geovisualization.html">
+  <link rel="alternate" type="application/rss+xml" title="Spatial Data Analysis with PySAL @NARSC2018" href="/YOUR%20URL//feed.xml">
+
+  <meta property="og:url"         content="/YOUR%20URL//processing/09_geovisualization.html" />
+<meta property="og:type"        content="article" />
+<meta property="og:title"       content="Geovisualization" />
+<meta property="og:description" content="Choropleth Mapping" />
+<meta property="og:image"       content="" />
+
+
+  <script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage":
+    "YOUR URL//processing/09_geovisualization.html",
+  "headline":
+    "Geovisualization",
+  "datePublished":
+    "2019-07-14T14:01:36-05:00",
+  "dateModified":
+    "2019-07-14T14:01:36-05:00",
+  "description":
+    "Choropleth Mapping",
+  "author": {
+    "@type": "Person",
+    "name": "Sergio Rey and Wei Kang"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Data 100 at UC Berkeley",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "YOUR URL/",
+      "width": 60,
+      "height": 60
+    }
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "YOUR URL/",
+    "height": 60,
+    "width": 60
+  }
+}
+
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css ">
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+  <!-- <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#efae0a"> -->
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+  <meta name="theme-color" content="#233947">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/logo/favicon.ico">
+
+  <!-- MathJax Config -->
+  <!-- Allow inline math using $ and automatically break long math lines -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true,
+        processEnvironments: true
+    },
+    CommonHTML: {
+        linebreaks: {
+            automatic: true,
+        },
+    },
+});
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML' async></script>
+
+  <!-- DOM updating function -->
+  <script>
+const runWhenDOMLoaded = cb => {
+  if (document.readyState != 'loading') {
+    cb()
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', cb)
+  } else {
+    document.attachEvent('onreadystatechange', function() {
+      if (document.readyState == 'complete') cb()
+    })
+  }
+}
+
+// Helper function to init things quickly
+initFunction = function(myfunc) {
+  runWhenDOMLoaded(myfunc);
+  document.addEventListener('turbolinks:load', myfunc);
+};
+</script>
+
+  <!-- Define some javascript variables that will be useful in other javascript -->
+  <script>
+    const site_basename = '/';
+  </script>
+
+  <!-- Add AnchorJS to let headers be linked -->
+  <script src="/assets/js/anchor.min.js"  type="text/javascript"></script>
+  <script>
+
+initFunction(function () {
+    anchors.add("main h1, main h2, main h3, main h4")
+});
+
+</script>
+
+  <!-- Include Turbolinks to make page loads fast -->
+  <!-- https://github.com/turbolinks/turbolinks -->
+  <script src="/assets/js/turbolinks.js" async></script>
+  <meta name="turbolinks-cache-control" content="no-cache">
+
+  <!-- Load nbinteract for widgets -->
+  
+
+  <!-- Load Thebelab for interactive widgets -->
+  <!-- Include Thebelab for interactive code if it's enabled -->
+
+
+<!-- Display Thebelab button in each code cell -->
+<script>
+/**
+ * Set up thebelab button for code blocks
+ */
+
+const thebelabCellButton = id =>
+  `<a id="thebelab-cell-button-${id}" class="btn thebebtn o-tooltip--left" data-tooltip="Interactive Mode">
+    <img src="/assets/images/edit-button.svg" alt="Start interactive mode">
+  </a>`
+
+
+const addThebelabButtonToCodeCells =  () => {
+
+  const codeCells = document.querySelectorAll('div.input_area > div.highlighter-rouge:not(.output) pre')
+  codeCells.forEach((codeCell, index) => {
+    const id = codeCellId(index)
+    codeCell.setAttribute('id', id)
+    if (document.getElementById("thebelab-cell-button-" + id) == null) {
+      codeCell.insertAdjacentHTML('afterend', thebelabCellButton(id));
+    }
+  })
+}
+
+initFunction(addThebelabButtonToCodeCells);
+</script>
+
+
+
+<script type="text/x-thebe-config">
+    {
+      requestKernel: true,
+      binderOptions: {
+        repo: 'YOUR-ORG/YOUR-REPO',
+        ref: 'gh-pages',
+      },
+      codeMirrorConfig: {
+        theme: "abcdef"
+      },
+      kernelOptions: {
+        name: 'python3',
+      }
+    }
+</script>
+<script src="https://unpkg.com/thebelab@0.4.0/lib/index.js"></script>
+<script>
+    /**
+     * Add attributes to Thebelab blocks
+     */
+
+    const initThebelab = () => {
+        const addThebelabToCodeCells = () => {
+            console.log("Adding thebelab to code cells...");
+            // If Thebelab hasn't loaded, wait a bit and try again. This
+            // happens because we load ClipboardJS asynchronously.
+            if (window.thebelab === undefined) {
+                setTimeout(addThebelabToCodeCells, 250)
+            return
+            }
+
+            // If we already detect a Thebelab cell, don't re-run
+            if (document.querySelectorAll('div.thebelab-cell').length > 0) {
+                return;
+            }
+
+            // Find all code cells, replace with Thebelab interactive code cells
+            const codeCells = document.querySelectorAll('.input_area pre')
+            codeCells.forEach((codeCell, index) => {
+                const id = codeCellId(index)
+                codeCell.setAttribute('data-executable', 'true')
+
+                // Figure out the language it uses and add this too
+                var parentDiv = codeCell.parentElement.parentElement;
+                var arrayLength = parentDiv.classList.length;
+                for (var ii = 0; ii < arrayLength; ii++) {
+                    var parts = parentDiv.classList[ii].split('language-');
+                    if (parts.length === 2) {
+                        // If found, assign dataLanguage and break the loop
+                        var dataLanguage = parts[1];
+                        break;
+                    }
+                }
+                codeCell.setAttribute('data-language', dataLanguage)
+
+                // If the code cell is hidden, show it
+                var inputCheckbox = document.querySelector(`input#hidebtn${codeCell.id}`);
+                if (inputCheckbox !== null) {
+                    setCodeCellVisibility(inputCheckbox, 'visible');
+                }
+            });
+
+            // Remove the event listener from the page so keyboard press doesn't
+            // Change page
+            document.removeEventListener('keydown', initPageNav)
+            keyboardListener = false;
+
+            // Init thebelab
+            thebelab.bootstrap();
+
+            // Remove copy buttons since they won't work anymore
+            const copyAndThebeButtons = document.querySelectorAll('.copybtn, .thebebtn')
+            copyAndThebeButtons.forEach((button, index) => {
+                button.remove();
+            });
+
+            // Remove outputs since they'll be stale
+            const outputs = document.querySelectorAll('.output *, .output')
+            outputs.forEach((output, index) => {
+                output.remove();
+            });
+        }
+
+        // Add event listener for the function to modify code cells
+        const thebelabButtons = document.querySelectorAll('[id^=thebelab], [id$=thebelab]')
+        thebelabButtons.forEach((thebelabButton,index) => {
+            if (thebelabButton === null) {
+                setTimeout(initThebelab, 250)
+                return
+            };
+            thebelabButton.addEventListener('click', addThebelabToCodeCells);
+        });
+    }
+
+    // Initialize Thebelab
+    initFunction(initThebelab);
+</script>
+
+
+
+  <!-- Load the auto-generating TOC -->
+  <script src="/assets/js/tocbot.min.js"  type="text/javascript"></script>
+  <script>
+var initToc = function () {
+  tocbot.init({
+    tocSelector: 'nav.onthispage',
+    contentSelector: '.c-textbook__content',
+    headingSelector: 'h2, h3',
+    orderedList: false,
+    collapseDepth: 6,
+    listClass: 'toc__menu',
+    activeListItemClass: "",  // Not using
+    activeLinkClass: "", // Not using
+  });
+  tocbot.refresh();
+}
+initFunction(initToc);
+</script>
+
+  <!-- Google analytics -->
+  <script src="/assets/js/ga.js" async></script>
+
+  <!-- Clipboard copy button -->
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" async></script>
+
+  <!-- Load JS that depends on site variables -->
+  <script>
+/**
+ * Set up copy/paste for code blocks
+ */
+const codeCellId = index => `codecell${index}`
+
+const clipboardButton = id =>
+  `<a id="copy-button-${id}" class="btn copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#${id}">
+    <img src="/assets/images/copy-button.svg" alt="Copy to clipboard">
+  </a>`
+
+// Clears selected text since ClipboardJS will select the text when copying
+const clearSelection = () => {
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges()
+  } else if (document.selection) {
+    document.selection.empty()
+  }
+}
+
+// Changes tooltip text for two seconds, then changes it back
+const temporarilyChangeTooltip = (el, newText) => {
+  const oldText = el.getAttribute('data-tooltip')
+  el.setAttribute('data-tooltip', newText)
+  setTimeout(() => el.setAttribute('data-tooltip', oldText), 2000)
+}
+
+const addCopyButtonToCodeCells = () => {
+  // If ClipboardJS hasn't loaded, wait a bit and try again. This
+  // happens because we load ClipboardJS asynchronously.
+  if (window.ClipboardJS === undefined) {
+    setTimeout(addCopyButtonToCodeCells, 250)
+    return
+  }
+
+  const codeCells = document.querySelectorAll('div.c-textbook__content > div.highlighter-rouge > div.highlight > pre, div.input_area pre')
+  codeCells.forEach((codeCell, index) => {
+    const id = codeCellId(index)
+    codeCell.setAttribute('id', id)
+    if (document.getElementById("copy-button" + id) == null) {
+      codeCell.insertAdjacentHTML('afterend', clipboardButton(id));
+    }
+  })
+
+  const clipboard = new ClipboardJS('.copybtn')
+  clipboard.on('success', event => {
+    clearSelection()
+    temporarilyChangeTooltip(event.trigger, 'Copied!')
+  })
+
+  clipboard.on('error', event => {
+    temporarilyChangeTooltip(event.trigger, 'Failed to copy')
+  })
+
+  // Get rid of clipboard before the next page visit to avoid memory leak
+  document.addEventListener('turbolinks:before-visit', () =>
+    clipboard.destroy()
+  )
+}
+
+initFunction(addCopyButtonToCodeCells);
+</script>
+
+
+  <!-- Hide cell code -->
+  <script>
+    /**
+    Add buttons to hide code cells
+    */
+
+
+    var setCodeCellVisibility = function (inputField, kind) {
+        // Update the image and class for hidden
+        var id = inputField.getAttribute('data-id');
+        var codeCell = document.querySelector(`#${id} div.highlight`);
+
+        if (kind === "visible") {
+            codeCell.classList.remove('hidden');
+            inputField.checked = true;
+        } else {
+            codeCell.classList.add('hidden');
+            inputField.checked = false;
+        }
+    }
+
+    var toggleCodeCellVisibility = function (event) {
+        // The label is clicked, and now we decide what to do based on the input field's clicked status
+        if (event.target.tagName === "LABEL") {
+            var inputField = event.target.previousElementSibling;
+        } else {
+            // It is the span inside the target
+            var inputField = event.target.parentElement.previousElementSibling;
+        }
+
+        if (inputField.checked === true) {
+            setCodeCellVisibility(inputField, "visible");
+        } else {
+            setCodeCellVisibility(inputField, "hidden");
+        }
+    }
+
+
+    // Button constructor
+    const hideCodeButton = id => `<input class="hidebtn" type="checkbox" id="hidebtn${id}" data-id="${id}"><label title="Toggle cell" for="hidebtn${id}" class="plusminus"><span class="pm_h"></span><span class="pm_v"></span></label>`
+
+    var addHideButton = function () {
+        // If a hide button is already added, don't add another
+        if (document.querySelector('div.hidecode input') !== null) {
+            return;
+        }
+
+        // Find the input cells and add a hide button
+        document.querySelectorAll('div.input_area').forEach(function (item, index) {
+            if (!item.classList.contains("hidecode")) {
+                // Skip the cell if it doesn't have a hidecode class
+                return;
+            }
+
+            const id = codeCellId(index)
+            item.setAttribute('id', id);
+            // Insert the button just inside the end of the next div
+            item.querySelector('div').insertAdjacentHTML('beforeend', hideCodeButton(id))
+
+            // Set up the visibility toggle
+            hideLink = document.querySelector(`#${id} div.highlight + input + label`);
+            hideLink.addEventListener('click', toggleCodeCellVisibility)
+        });
+    }
+
+
+    // Initialize the hide buttos
+    var initHiddenCells = function () {
+        // Add hide buttons to the cells
+        addHideButton();
+
+        // Toggle the code cells that should be hidden
+        document.querySelectorAll('div.hidecode input').forEach(function (item) {
+            setCodeCellVisibility(item, 'hidden');
+            item.checked = true;
+        })
+    }
+
+    initFunction(initHiddenCells);
+
+</script>
+
+  <!-- Load custom website scripts -->
+  <script src="/assets/js/scripts.js" async></script>
+
+  <!-- Load custom user CSS and JS  -->
+  <script src="/assets/custom/custom.js" async></script>
+  <link rel="stylesheet" href="/assets/custom/custom.css">
+
+  <!-- Update interact links w/ REST param, is defined in includes so we can use templates -->
+  
+
+  <!-- Lunr search code - will only be executed on the /search page -->
+  <script src="/assets/js/lunr/lunr.min.js" type="text/javascript"></script>
+  <script>var initQuery = function() {
+  // See if we have a search box
+  var searchInput = document.querySelector('input#lunr_search');
+  if (searchInput === null) {
+    return;
+  }
+
+  // Function to parse our lunr cache
+  var idx = lunr(function () {
+    this.field('title')
+    this.field('excerpt')
+    this.field('categories')
+    this.field('tags')
+    this.ref('id')
+
+    this.pipeline.remove(lunr.trimmer)
+
+    for (var item in store) {
+      this.add({
+        title: store[item].title,
+        excerpt: store[item].excerpt,
+        categories: store[item].categories,
+        tags: store[item].tags,
+        id: item
+      })
+    }
+  });
+
+  // Run search upon keyup
+  searchInput.addEventListener('keyup', function () {
+    var resultdiv = document.querySelector('#results');
+    var query = document.querySelector("input#lunr_search").value.toLowerCase();
+    var result =
+      idx.query(function (q) {
+        query.split(lunr.tokenizer.separator).forEach(function (term) {
+          q.term(term, { boost: 100 })
+          if(query.lastIndexOf(" ") != query.length-1){
+            q.term(term, {  usePipeline: false, wildcard: lunr.Query.wildcard.TRAILING, boost: 10 })
+          }
+          if (term != ""){
+            q.term(term, {  usePipeline: false, editDistance: 1, boost: 1 })
+          }
+        })
+      });
+
+      // Empty the results div
+      while (resultdiv.firstChild) {
+        resultdiv.removeChild(resultdiv.firstChild);
+      }
+
+    resultdiv.insertAdjacentHTML('afterbegin', '<p class="results__found">'+result.length+' Result(s) found</p>');
+    for (var item in result) {
+      var ref = result[item].ref;
+      if(store[ref].teaser){
+        var searchitem =
+          '<div class="list__item">'+
+            '<article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">'+
+              '<h2 class="archive__item-title" itemprop="headline">'+
+                '<a href="'+store[ref].url+'" rel="permalink">'+store[ref].title+'</a>'+
+              '</h2>'+
+              '<div class="archive__item-teaser">'+
+                '<img src="'+store[ref].teaser+'" alt="">'+
+              '</div>'+
+              '<p class="archive__item-excerpt" itemprop="description">'+store[ref].excerpt.split(" ").splice(0,20).join(" ")+'...</p>'+
+            '</article>'+
+          '</div>';
+      }
+      else{
+    	  var searchitem =
+          '<div class="list__item">'+
+            '<article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">'+
+              '<h2 class="archive__item-title" itemprop="headline">'+
+                '<a href="'+store[ref].url+'" rel="permalink">'+store[ref].title+'</a>'+
+              '</h2>'+
+              '<p class="archive__item-excerpt" itemprop="description">'+store[ref].excerpt.split(" ").splice(0,20).join(" ")+'...</p>'+
+            '</article>'+
+          '</div>';
+      }
+      resultdiv.insertAdjacentHTML('beforeend', searchitem);
+    }
+  });
+};
+
+initFunction(initQuery);
+</script>
+</head>
+
+  <body>
+    <!-- .js-show-sidebar shows sidebar by default -->
+    <div id="js-textbook" class="c-textbook js-show-sidebar">
+      
+
+
+
+<nav id="js-sidebar" class="c-textbook__sidebar">
+  <a href="https://jupyter.org/jupyter-book/"><img src="/images/logo/logo.png" class="textbook_logo" id="sidebar-logo" data-turbolinks-permanent/></a>
+  <h2 class="c-sidebar__title">Spatial Data Analysis with PySAL @NARSC2018</h2>
+  <ul class="c-sidebar__chapters">
+    
+      
+      
+
+      
+      
+
+      
+      
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="/intro.html"
+        >
+          
+          Home
+        </a>
+
+        
+      </li>
+
+      
+    
+      
+      
+
+      
+      
+
+      
+      
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="https://github.com/sjsrey/pysalnarsc18"
+        >
+          
+          GitHub repository
+        </a>
+
+        
+      </li>
+
+      
+    
+      
+      
+        <li class="c-sidebar__chapter"><a class="c-sidebar__entry" href="/search.html">Search</a></li>
+        
+      
+      
+        <li class="c-sidebar__divider"></li>
+        
+      
+      
+        <li><h2 class="c-sidebar__title">Content</li>
+        
+      
+      
+
+      
+      
+
+      
+      
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="/primer/intro.html"
+        >
+          
+            1.
+          
+          Python Primer
+        </a>
+
+        
+
+          
+          
+          
+          
+
+          
+
+          <ul class="c-sidebar__sections u-hidden-visually">
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/primer/00_notebook_intro.html"
+                >
+                  
+                    1.1
+                  
+                  Jupyter Notebooks
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/primer/01_strings.html"
+                >
+                  
+                    1.2
+                  
+                  Strings
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/primer/02_sequences.html"
+                >
+                  
+                    1.3
+                  
+                  Sequences
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/primer/03_dictionaries.html"
+                >
+                  
+                    1.4
+                  
+                  Dictionaries
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/primer/04_conditionals.html"
+                >
+                  
+                    1.5
+                  
+                  Conditionals
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+          </ul>
+        
+      </li>
+
+      
+    
+      
+      
+
+      
+      
+
+      
+      
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="/processing/intro.html"
+        >
+          
+            2.
+          
+          Geoprocessing and Visualization
+        </a>
+
+        
+
+          
+          
+          
+          
+
+          
+
+          <ul class="c-sidebar__sections ">
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/processing/07_data_processing.html"
+                >
+                  
+                    2.1
+                  
+                  Geoprocessing spatial data
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/processing/08_routes.html"
+                >
+                  
+                    2.2
+                  
+                  Geoprocessing Exercise
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry c-sidebar__entry--active"
+                  href="/processing/09_geovisualization.html"
+                >
+                  
+                    2.3
+                  
+                  Geovisualization
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+          </ul>
+        
+      </li>
+
+      
+    
+      
+      
+
+      
+      
+
+      
+      
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="/esda/intro.html"
+        >
+          
+            3.
+          
+          Exploratory Spatial Data Analysis
+        </a>
+
+        
+
+          
+          
+          
+          
+
+          
+
+          <ul class="c-sidebar__sections u-hidden-visually">
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/esda/13_global_texas.html"
+                >
+                  
+                    3.1
+                  
+                  Global Spatial Autocorrelation
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/esda/12_sp_corr.html"
+                >
+                  
+                    3.2
+                  
+                  Interactive Spatial Autocorrelation
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/esda/14_local_texas.html"
+                >
+                  
+                    3.3
+                  
+                  Local Autocorrelation Analysis
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/esda/16_spatial_dynamics_analytics.html"
+                >
+                  
+                    3.4
+                  
+                  Spatial Dynamics Analytics
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/esda/17_spatial_dynamics_visualization.html"
+                >
+                  
+                    3.5
+                  
+                  Spatial Dynamics Visualization
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+          </ul>
+        
+      </li>
+
+      
+    
+  </ul>
+  <p class="sidebar_footer">Powered by <a href="https://github.com/jupyter/jupyter-book">Jupyter Book</a></p>
+</nav>
+
+      
+      <!-- Empty sidebar placeholder that we'll auto-fill with javascript -->
+      <aside class="sidebar__right">
+          <header><h4 class="nav__title"><i class="fa fa-list"></i>   On this page</h4></header>
+          <nav class="onthispage">
+          </nav>
+      </aside>
+      
+      <main class="c-textbook__page" tabindex="-1">
+          <div class="o-wrapper">
+            <div class="c-sidebar-toggle">
+  <!-- We show the sidebar by default so we use .is-active -->
+  <button
+    id="js-sidebar-toggle"
+    class="hamburger hamburger--arrowalt is-active"
+  >
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+    <span class="c-sidebar-toggle__label">Toggle Sidebar</span>
+  </button>
+</div>
+
+            
+<div class="buttons">
+<a href="/content/processing/09_geovisualization.ipynb" download>
+<button id="interact-button-download" class="interact-button">Download</button>
+</a>
+
+<button id="interact-button-thebelab" class="interact-button">Thebelab</button>
+
+
+
+
+
+</div>
+
+
+            <div class="c-textbook__content">
+              <h1 id="choropleth-mapping">Choropleth Mapping</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>When PySAL was originally planned, the intention was to focus on the computational aspects of exploratory spatial data analysis and spatial econometric methods, while relying on existing GIS packages and visualization libraries for visualization of computations. Indeed, we have partnered with <a href="https://geodacenter.asu.edu/arc_pysal">esri</a> and <a href="http://planet.qgis.org/planet/tag/pysal/">QGIS</a> towards this end.</p>
+
+<p>However, over time we have received many requests for supporting basic geovisualization within PySAL so that the step of having to interoperate with an exertnal package can be avoided, thereby increasing the efficiency of the spatial analytical workflow.</p>
+
+<p>In this notebook, we demonstrate several approaches towards a particular subset of geovisualization methods, namely <strong>choropleth maps</strong>. We start with  a self-contained exploratory workflow where no other dependencies beyond PySAL are required. The idea here is to support quick generation of different views of your data to complement the statistical and econometric work in PySAL. Once your work has progressed to the publication stage, we point you to resources that can be used for publication quality output.</p>
+
+<p>We then move on to consider three other packages that can be used in conjunction with PySAL for choropleth mapping:</p>
+
+<ul>
+  <li>geopandas</li>
+  <li>folium</li>
+  <li>cartopy</li>
+  <li>bokeh</li>
+</ul>
+
+<h2 id="pysal-viz-module">PySAL Viz Module</h2>
+
+<p>The  mapping module in PySAL is organized around three main layers:</p>
+
+<ul>
+  <li>A lower-level layer that reads polygon, line and point shapefiles and returns a Matplotlib collection.</li>
+  <li>A medium-level layer that performs some usual transformations on a Matplotlib object (e.g. color code polygons according to a vector of values).</li>
+  <li>A higher-level layer intended for end-users for particularly useful cases and style preferences pre-defined (e.g. Create a choropleth).</li>
+</ul>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pysal</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="n">rdm</span>
+<span class="kn">from</span> <span class="nn">pysal.contrib.viz</span> <span class="kn">import</span> <span class="n">mapping</span> <span class="k">as</span> <span class="n">maps</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h3 id="lower-level-component">Lower-level component</h3>
+
+<p>This includes basic functionality to read spatial data from a file (currently only shapefiles supported) and produce rudimentary Matplotlib objects. The main methods are:</p>
+
+<ul>
+  <li>map_poly_shape: to read in polygon shapefiles</li>
+  <li>map_line_shape: to read in line shapefiles</li>
+  <li>map_point_shape: to read in point shapefiles</li>
+</ul>
+
+<p>These methods all support an option to subset the observations to be plotted (very useful when missing values are present). They can also be overlaid and combined by using the <code class="highlighter-rouge">setup_ax</code> function. the resulting object is very basic but also very flexible so, for minds used to matplotlib this should be good news as it allows to modify pretty much any property and attribute.</p>
+
+<h4 id="example">Example</h4>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">shp_link</span> <span class="o">=</span> <span class="s">'data/texas.shp'</span>
+<span class="n">shp</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">shp_link</span><span class="p">)</span>
+<span class="n">some</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bool</span><span class="p">(</span><span class="n">rdm</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">shp_link</span><span class="p">)]</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+
+<span class="n">base</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">map_poly_shp</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span>
+<span class="n">base</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s">'none'</span><span class="p">)</span>
+<span class="n">base</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="n">base</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s">'0.8'</span><span class="p">)</span>
+<span class="n">some</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">map_poly_shp</span><span class="p">(</span><span class="n">shp</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="n">some</span><span class="p">)</span>
+<span class="n">some</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">some</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
+<span class="n">cents</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">poly</span><span class="o">.</span><span class="n">centroid</span> <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">shp_link</span><span class="p">)])</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="n">scatter</span><span class="p">(</span><span class="n">cents</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cents</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">pts</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s">'red'</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">setup_ax</span><span class="p">([</span><span class="n">base</span><span class="p">,</span> <span class="n">some</span><span class="p">,</span> <span class="n">pts</span><span class="p">],</span> <span class="p">[</span><span class="n">shp</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span> <span class="n">shp</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span> <span class="n">shp</span><span class="o">.</span><span class="n">bbox</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h3 id="medium-level-component">Medium-level component</h3>
+
+<p>This layer comprises functions that perform usual transformations on matplotlib objects, such as color coding objects (points, polygons, etc.) according to a series of values. This includes the following methods:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">base_choropleth_classless</code></li>
+  <li><code class="highlighter-rouge">base_choropleth_unique</code></li>
+  <li><code class="highlighter-rouge">base_choropleth_classif</code></li>
+</ul>
+
+<h4 id="example-1">Example</h4>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net_link</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s">'eberly_net.shp'</span><span class="p">)</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">net_link</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">net_link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'.shp'</span><span class="p">,</span> <span class="s">'.dbf'</span><span class="p">))</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s">'TNODE'</span><span class="p">))</span>
+
+<span class="n">pts_link</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">examples</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s">'eberly_net_pts_onnetwork.shp'</span><span class="p">)</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">pts_link</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+
+<span class="n">netm</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">map_line_shp</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+<span class="n">netc</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">base_choropleth_unique</span><span class="p">(</span><span class="n">netm</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+
+<span class="n">ptsm</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">map_point_shp</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+<span class="n">ptsm</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">base_choropleth_classif</span><span class="p">(</span><span class="n">ptsm</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+<span class="n">ptsm</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ptsm</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">setup_ax</span><span class="p">([</span><span class="n">netc</span><span class="p">,</span> <span class="n">ptsm</span><span class="p">],</span> <span class="p">[</span><span class="n">net</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">bbox</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">maps</span><span class="o">.</span><span class="n">plot_poly_lines</span><span class="p">(</span><span class="s">'data/texas.shp'</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h3 id="higher-level-component">Higher-level component</h3>
+
+<p>This currently includes the following end-user functions:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">plot_poly_lines</code>: very quick shapfile plotting</li>
+</ul>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">shp_link</span> <span class="o">=</span> <span class="s">'data/texas.shp'</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="s">'data/texas.dbf'</span><span class="p">)</span><span class="o">.</span><span class="n">by_col</span><span class="p">(</span><span class="s">'HR90'</span><span class="p">))</span>
+
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s">'classless'</span><span class="p">,</span> <span class="s">'unique_values'</span><span class="p">,</span> <span class="s">'quantiles'</span><span class="p">,</span> <span class="s">'equal_interval'</span><span class="p">,</span> <span class="s">'fisher_jenks'</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">typ</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
+    <span class="n">maps</span><span class="o">.</span><span class="n">plot_choropleth</span><span class="p">(</span><span class="n">shp_link</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">typ</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h3 id="pysal-map-classifiers">PySAL Map Classifiers</h3>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90</span> <span class="o">=</span> <span class="n">values</span>
+<span class="n">hr90q5</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Quantiles</span><span class="p">(</span><span class="n">hr90</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">hr90q5</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90q4</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Quantiles</span><span class="p">(</span><span class="n">hr90</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">hr90q4</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90e5</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Equal_Interval</span><span class="p">(</span><span class="n">hr90</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">hr90e5</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90fj5</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Fisher_Jenks</span><span class="p">(</span><span class="n">hr90</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">hr90fj5</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90fj5</span><span class="o">.</span><span class="n">adcm</span> <span class="c"># measure of fit: Absolute deviation around class means</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90q5</span><span class="o">.</span><span class="n">adcm</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90e5</span><span class="o">.</span><span class="n">adcm</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90fj5</span><span class="o">.</span><span class="n">yb</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span> <span class="c"># what bin each value is placed in</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hr90fj5</span><span class="o">.</span><span class="n">bins</span> <span class="c"># upper bounds of each bin</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h2 id="geopandas">GeoPandas</h2>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="n">gpd</span>
+<span class="n">shp_link</span> <span class="o">=</span> <span class="s">"data/texas.shp"</span>
+<span class="n">tx</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">shp_link</span><span class="p">)</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">'blue'</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">type</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">)</span> <span class="c"># uses pysal classifier under the hood</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">)</span> <span class="c"># we need a continuous color map</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">)</span> <span class="c"># bump up to quintiles</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">'green'</span><span class="p">)</span> <span class="c"># explore options, polygon fills</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">'green'</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c"># border</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">'green'</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> <span class="c"># border</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">)</span> <span class="c"># now with qunatiles</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span> <span class="c"># make plot larger</span>
+
+<span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">,</span> \
+        <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> \
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s">'white'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'equal_interval'</span><span class="p">,</span> \
+        <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> \
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s">'white'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># try deciles</span>
+<span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'HR90'</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s">'QUANTILES'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ok, let's work around to get deciles</span>
+<span class="n">q10</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Quantiles</span><span class="p">(</span><span class="n">tx</span><span class="o">.</span><span class="n">HR90</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">q10</span><span class="o">.</span><span class="n">bins</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">q10</span><span class="o">.</span><span class="n">yb</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cl</span><span class="o">=</span><span class="n">q10</span><span class="o">.</span><span class="n">yb</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'cl'</span><span class="p">,</span> <span class="n">categorical</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> \
+        <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> \
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fj10</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Fisher_Jenks</span><span class="p">(</span><span class="n">tx</span><span class="o">.</span><span class="n">HR90</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">fj10</span><span class="o">.</span><span class="n">bins</span>
+<span class="c">#labels = ["%0.1f"%l for l in fj10.bins]</span>
+<span class="c">#labels</span>
+<span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cl</span><span class="o">=</span><span class="n">fj10</span><span class="o">.</span><span class="n">yb</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'cl'</span><span class="p">,</span> <span class="n">categorical</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> \
+        <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> \
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fj10</span><span class="o">.</span><span class="n">adcm</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">q10</span><span class="o">.</span><span class="n">adcm</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">q5</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Quantiles</span><span class="p">(</span><span class="n">tx</span><span class="o">.</span><span class="n">HR90</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">tx</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">cl</span><span class="o">=</span><span class="n">q5</span><span class="o">.</span><span class="n">yb</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s">'cl'</span><span class="p">,</span> <span class="n">categorical</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> \
+        <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'OrRd'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> \
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h2 id="folium">Folium</h2>
+
+<p>In addition to using matplotlib, the viz module includes components that interface with the <a href="http://folium.readthedocs.io/en/latest/">folium</a> library which provides a Pythonic way to generate <a href="http://leafletjs.com/">Leaflet</a> maps.</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pysal</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">import</span> <span class="nn">geojson</span> <span class="k">as</span> <span class="n">gj</span>
+<span class="kn">from</span> <span class="nn">pysal.contrib.viz</span> <span class="kn">import</span> <span class="n">folium_mapping</span> <span class="k">as</span> <span class="n">fm</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>First, we need to convert the data into a JSON format. JSON, short for “Javascript Serialized Object Notation,” is a simple and effective way to represent objects in a digital environment. For geographic information, the <a href="https://geojson.org">GeoJSON</a> standard defines how to represent geographic information in JSON format. Python programmers may be more comfortable thinking of JSON data as something akin to a standard Python dictionary.</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filepath</span> <span class="o">=</span> <span class="s">'data/texas.shp'</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">shp</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span> <span class="o">+</span> <span class="s">'.shp'</span><span class="p">)</span>
+<span class="n">dbf</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span> <span class="o">+</span> <span class="s">'.dbf'</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span> <span class="o">=</span> <span class="n">fm</span><span class="o">.</span><span class="n">build_features</span><span class="p">(</span><span class="n">shp</span><span class="p">,</span> <span class="n">dbf</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>Just to show, this constructs a dictionary with the following keys:</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span><span class="o">.</span><span class="nb">type</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span><span class="o">.</span><span class="n">bbox</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>Then, we write the json to a file:</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'./example.json'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+    <span class="n">gj</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">js</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h3 id="mapping">Mapping</h3>
+<p>Let’s look at the columns that we are going to map.</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">list</span><span class="p">(</span><span class="n">js</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">keys</span><span class="p">())[:</span><span class="mi">5</span><span class="p">]</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>We can map these attributes by calling them as arguments to the choropleth mapping function:</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fm</span><span class="o">.</span><span class="n">choropleth_map</span><span class="err">?</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># folium maps have been turned off for creating gitbook. </span>
+<span class="c"># to run them, uncomment.</span>
+<span class="n">fm</span><span class="o">.</span><span class="n">choropleth_map</span><span class="p">(</span><span class="s">'./example.json'</span><span class="p">,</span> <span class="s">'FIPS'</span><span class="p">,</span> <span class="s">'HR90'</span><span class="p">,</span><span class="n">zoom_start</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>This produces a map using default classifications and color schemes and saves it to an html file. We set the function to have sane defaults. However, if the user wants to have more control, we have many options available.</p>
+
+<p>There are arguments to change the classification scheme:</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># folium maps have been turned off for creating gitbook. </span>
+<span class="c"># to run them, uncomment.</span>
+<span class="n">fm</span><span class="o">.</span><span class="n">choropleth_map</span><span class="p">(</span><span class="s">'./example.json'</span><span class="p">,</span> <span class="s">'FIPS'</span><span class="p">,</span> <span class="s">'HR90'</span><span class="p">,</span> <span class="n">classification</span> <span class="o">=</span> <span class="s">'Quantiles'</span><span class="p">,</span><span class="n">classes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>Most PySAL classifiers are supported.</p>
+
+<h3 id="base-map-type">Base Map Type</h3>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># folium maps have been turned off for creating gitbook. </span>
+<span class="c"># to run them, uncomment.</span>
+<span class="n">fm</span><span class="o">.</span><span class="n">choropleth_map</span><span class="p">(</span><span class="s">'./example.json'</span><span class="p">,</span> <span class="s">'FIPS'</span><span class="p">,</span> <span class="s">'HR90'</span><span class="p">,</span> <span class="n">classification</span> <span class="o">=</span> <span class="s">'Jenks Caspall'</span><span class="p">,</span> \
+                  <span class="n">tiles</span><span class="o">=</span><span class="s">'Stamen Toner'</span><span class="p">,</span><span class="n">zoom_start</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>We support the entire range of builtin basemap types in Folium, but custom tilesets from MapBox are not supported (yet).</p>
+
+<h3 id="color-scheme">Color Scheme</h3>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># folium maps have been turned off for creating gitbook. </span>
+<span class="c"># to run them, uncomment.</span>
+
+<span class="n">fm</span><span class="o">.</span><span class="n">choropleth_map</span><span class="p">(</span><span class="s">'./example.json'</span><span class="p">,</span> <span class="s">'FIPS'</span><span class="p">,</span> <span class="s">'HR80'</span><span class="p">,</span> <span class="n">classification</span> <span class="o">=</span> <span class="s">'Jenks Caspall'</span><span class="p">,</span> \
+                 <span class="n">tiles</span><span class="o">=</span><span class="s">'Stamen Toner'</span><span class="p">,</span> <span class="n">fill_color</span> <span class="o">=</span> <span class="s">'PuBuGn'</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>All color schemes are <a href="http://colorbrewer2.org">Color Brewer</a> and simply pass through to <code class="highlighter-rouge">Folium</code> on execution.</p>
+
+<p>Folium supports up to 6 classes.</p>
+
+<h2 id="cartopy">Cartopy</h2>
+
+<p>Next we turn to <a href="http://scitools.org.uk/cartopy/">cartopy</a>.</p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="n">mpatches</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="n">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy.io.shapereader</span> <span class="k">as</span> <span class="n">shpreader</span>
+
+<span class="n">reader</span> <span class="o">=</span> <span class="n">shpreader</span><span class="o">.</span><span class="n">Reader</span><span class="p">(</span><span class="s">"data/texas.shp"</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="o">-</span><span class="mi">108</span><span class="p">,</span> <span class="o">-</span><span class="mi">93</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">Geodetic</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">background_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">outline_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="o">-</span><span class="mi">108</span><span class="p">,</span> <span class="o">-</span><span class="mi">93</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">Geodetic</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">background_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">outline_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">geometries</span><span class="p">()):</span>
+        <span class="n">facecolor</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="c">#facecolor = 'red'</span>
+        <span class="n">edgecolor</span> <span class="o">=</span> <span class="s">'black'</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_geometries</span><span class="p">([</span><span class="n">state</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> 
+                         <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">)</span>
+        
+    <span class="n">leg</span> <span class="o">=</span> <span class="p">[</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">leg</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s">'lower left'</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.025</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">fancybox</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fileName</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HR90</span> <span class="o">=</span> <span class="n">values</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bins_q5</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Quantiles</span><span class="p">(</span><span class="n">HR90</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bwr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s">'Reds'</span><span class="p">)</span>
+<span class="n">bwr</span><span class="p">(</span><span class="o">.</span><span class="mi">76</span><span class="p">)</span>
+<span class="n">c5</span> <span class="o">=</span> <span class="p">[</span><span class="n">bwr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="n">bins_q5</span><span class="o">.</span><span class="n">yb</span>
+<span class="n">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">c5</span><span class="p">,</span> <span class="n">reader</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">c5</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"HR90 Quintiles"</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">legend</span> <span class="o">=</span><span class="p">[</span> <span class="s">"</span><span class="si">%3</span><span class="s">d"</span><span class="o">%</span><span class="n">ub</span> <span class="k">for</span> <span class="n">ub</span> <span class="ow">in</span> <span class="n">bins_q5</span><span class="o">.</span><span class="n">bins</span><span class="p">]</span>
+<span class="n">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">c5</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"HR90 Quintiles"</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">):</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axison</span><span class="o">=</span><span class="bp">False</span>
+    
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="o">-</span><span class="mi">108</span><span class="p">,</span> <span class="o">-</span><span class="mi">93</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">Geodetic</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">background_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">outline_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="o">-</span><span class="mi">108</span><span class="p">,</span> <span class="o">-</span><span class="mi">93</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">Geodetic</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">background_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">outline_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">geometries</span><span class="p">()):</span>
+        <span class="n">facecolor</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="c">#facecolor = 'red'</span>
+        <span class="n">edgecolor</span> <span class="o">=</span> <span class="s">'black'</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_geometries</span><span class="p">([</span><span class="n">state</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> 
+                         <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">)</span>
+    
+        
+    <span class="n">leg</span> <span class="o">=</span> <span class="p">[</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">leg</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s">'lower left'</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.025</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">fancybox</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fileName</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="c">#ax.set_axis_off()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">legend</span> <span class="o">=</span><span class="p">[</span> <span class="s">"</span><span class="si">%3</span><span class="s">d"</span><span class="o">%</span><span class="n">ub</span> <span class="k">for</span> <span class="n">ub</span> <span class="ow">in</span> <span class="n">bins_q5</span><span class="o">.</span><span class="n">bins</span><span class="p">]</span>
+<span class="n">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">c5</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"HR90 Quintiles"</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">legend</span> <span class="o">=</span><span class="p">[</span> <span class="s">"</span><span class="si">%3</span><span class="s">d"</span><span class="o">%</span><span class="n">ub</span> <span class="k">for</span> <span class="n">ub</span> <span class="ow">in</span> <span class="n">bins_q5</span><span class="o">.</span><span class="n">bins</span><span class="p">]</span>
+<span class="n">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">c5</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"HR90 Quintiles"</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">):</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">),</span> <span class="n">frameon</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axison</span><span class="o">=</span><span class="bp">False</span>
+    
+    
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="o">-</span><span class="mi">108</span><span class="p">,</span> <span class="o">-</span><span class="mi">93</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">Geodetic</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">background_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">outline_patch</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">geometries</span><span class="p">()):</span>
+        <span class="n">facecolor</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">edgecolor</span> <span class="o">=</span> <span class="s">'white'</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_geometries</span><span class="p">([</span><span class="n">state</span><span class="p">],</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> 
+                         <span class="n">facecolor</span><span class="o">=</span><span class="n">facecolor</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">)</span>
+    
+        
+    <span class="n">leg</span> <span class="o">=</span> <span class="p">[</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">legend</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">leg</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s">'lower left'</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.025</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">fancybox</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fileName</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">legend</span> <span class="o">=</span><span class="p">[</span> <span class="s">"</span><span class="si">%3</span><span class="s">d"</span><span class="o">%</span><span class="n">ub</span> <span class="k">for</span> <span class="n">ub</span> <span class="ow">in</span> <span class="n">bins_q5</span><span class="o">.</span><span class="n">bins</span><span class="p">]</span>
+<span class="n">choropleth</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">c5</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">legend</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"HR90 Quintiles"</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<p>For an example publication and code where Cartopy was used for the mapping see: <a href="https://github.com/sjsrey/limaaag">Rey (2016)</a>.</p>
+
+<h2 id="bokeh">Bokeh</h2>
+
+<p><a href="http://bokeh.pydata.org/en/latest/">website</a></p>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">bokeh</span>
+<span class="n">bokeh</span><span class="o">.</span><span class="n">__version__</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="c">#from bokeh.sampledata import us_counties, unemployment</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">output_notebook</span><span class="p">,</span> <span class="n">ColumnDataSource</span><span class="p">,</span> <span class="n">output_file</span>
+<span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">HoverTool</span>
+
+<span class="c">#from bokeh.charts import Scatter, output_file, show</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gpd_bokeh</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="s">"""Convert geometries from geopandas to bokeh format"""</span>
+    <span class="n">nan</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">'nan'</span><span class="p">)</span>
+    <span class="n">lons</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">lats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">shape</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">shape</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s">'MultiPolygon'</span><span class="p">:</span>
+            <span class="n">gx</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">gy</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">ng</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="o">.</span><span class="n">geoms</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">member</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shape</span><span class="o">.</span><span class="n">geoms</span><span class="p">):</span>
+                <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">))</span>
+                <span class="n">xs</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">ys</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">gx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+                <span class="n">gy</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">ng</span><span class="p">:</span>
+                    <span class="n">gx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan</span><span class="p">)</span>
+                    <span class="n">gy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">lons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gx</span><span class="p">)</span>
+            <span class="n">lats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gy</span><span class="p">)</span>
+                
+        <span class="k">else</span><span class="p">:</span>     
+            <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">shape</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">))</span>
+            <span class="n">xs</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">ys</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">lons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+            <span class="n">lats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span> 
+
+    <span class="k">return</span> <span class="n">lons</span><span class="p">,</span><span class="n">lats</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span> <span class="o">=</span> <span class="n">gpd_bokeh</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">"Texas"</span><span class="p">,</span> <span class="n">toolbar_location</span><span class="o">=</span><span class="s">'left'</span><span class="p">,</span>
+          <span class="n">plot_width</span><span class="o">=</span><span class="mi">1100</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">700</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">patches</span><span class="p">(</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">fill_alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="c">#fill_color=state_colors,</span>
+         <span class="n">line_color</span><span class="o">=</span><span class="s">"#884444"</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">output_file</span><span class="p">(</span><span class="s">'choropleth.html'</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"choropleth.py example"</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bwr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s">'Reds'</span><span class="p">)</span>
+<span class="n">bwr</span><span class="p">(</span><span class="o">.</span><span class="mi">76</span><span class="p">)</span>
+<span class="n">c5</span> <span class="o">=</span> <span class="p">[</span><span class="n">bwr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="n">bins_q5</span><span class="o">.</span><span class="n">yb</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">c5</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]</span>
+
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">colors5</span> <span class="o">=</span> <span class="p">[</span><span class="s">"#F1EEF6"</span><span class="p">,</span> <span class="s">"#D4B9DA"</span><span class="p">,</span> <span class="s">"#C994C7"</span><span class="p">,</span> <span class="s">"#DF65B0"</span><span class="p">,</span> <span class="s">"#DD1C77"</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors5</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">"Texas HR90 Quintiles"</span><span class="p">,</span> <span class="n">toolbar_location</span><span class="o">=</span><span class="s">'left'</span><span class="p">,</span>
+          <span class="n">plot_width</span><span class="o">=</span><span class="mi">1100</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">700</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">patches</span><span class="p">(</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="p">,</span> <span class="n">fill_alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">fill_color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+         <span class="n">line_color</span><span class="o">=</span><span class="s">"#884444"</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">output_file</span><span class="p">(</span><span class="s">'choropleth.html'</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"choropleth.py example"</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h3 id="hover">Hover</h3>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">HoverTool</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">ColumnDataSource</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">tx</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span>
+        <span class="n">rate</span><span class="o">=</span><span class="n">HR90</span>
+    <span class="p">))</span>
+
+<span class="n">TOOLS</span> <span class="o">=</span> <span class="s">"pan, wheel_zoom, box_zoom, reset, hover, save"</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">"Texas Homicide 1990 (Quintiles)"</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">TOOLS</span><span class="p">,</span>
+          <span class="n">plot_width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+
+<span class="n">p</span><span class="o">.</span><span class="n">patches</span><span class="p">(</span><span class="s">'x'</span><span class="p">,</span> <span class="s">'y'</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+         <span class="n">fill_color</span><span class="o">=</span><span class="s">'color'</span><span class="p">,</span> <span class="n">fill_alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+         <span class="n">line_color</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">hover</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="n">HoverTool</span><span class="p">)</span>
+<span class="n">hover</span><span class="o">.</span><span class="n">point_policy</span> <span class="o">=</span> <span class="s">'follow_mouse'</span>
+<span class="n">hover</span><span class="o">.</span><span class="n">tooltips</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s">"Name"</span><span class="p">,</span> <span class="s">"@name"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"Homicide rate"</span><span class="p">,</span> <span class="s">"@rate"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"(Long, Lat)"</span><span class="p">,</span> <span class="s">"($x, $y)"</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<span class="n">output_file</span><span class="p">(</span><span class="s">"hr90.html"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"hr90.py example"</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<h2 id="exercises">Exercises</h2>
+
+<ol>
+  <li>Using Bokeh, use PySALs Fisher Jenks classifier with k=10 to generate a choropleth map of the homicide rates in 1990 for Texas counties. Modify the hover tooltips so that
+in addition to showing the Homicide rate, the rank of that rate is also shown.</li>
+  <li>Explore <code class="highlighter-rouge">ps.esda.mapclassify.</code> (hint: use tab completion) to select a new classifier (different from the ones in this notebook). Using the same data as in exercise 1, apply this classifier and create a choropleth using Bokeh.</li>
+</ol>
+
+<h2 id="solution">Solution</h2>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Exercise 1</span>
+<span class="n">fj10</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Fisher_Jenks</span><span class="p">(</span><span class="n">HR90</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="n">fj10</span><span class="o">.</span><span class="n">yb</span>
+
+<span class="c"># palettes from https://github.com/bokeh/bokeh/blob/master/bokeh/palettes.py</span>
+<span class="n">colors10</span> <span class="o">=</span><span class="p">[</span><span class="s">'#000000'</span><span class="p">,</span> <span class="s">'#1c1c1c'</span><span class="p">,</span> <span class="s">'#383838'</span><span class="p">,</span> <span class="s">'#555555'</span><span class="p">,</span> <span class="s">'#717171'</span><span class="p">,</span> <span class="s">'#8d8d8d'</span><span class="p">,</span> <span class="s">'#aaaaaa'</span><span class="p">,</span> <span class="s">'#c6c6c6'</span><span class="p">,</span> <span class="s">'#e2e2e2'</span><span class="p">,</span> <span class="s">'#ffffff'</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors10</span><span class="p">[</span><span class="mi">9</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]</span> <span class="c"># reverse the colors lighter to darker</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">tx</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span>
+        <span class="n">rate</span><span class="o">=</span><span class="n">HR90</span><span class="p">,</span>
+        <span class="n">classid</span><span class="o">=</span><span class="n">classes</span>
+    <span class="p">))</span>
+
+<span class="n">TOOLS</span> <span class="o">=</span> <span class="s">"pan, wheel_zoom, box_zoom, reset, hover, save"</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">"Texas Homicide 1990 (Fisher Jenks k=10)"</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">TOOLS</span><span class="p">,</span>
+          <span class="n">plot_width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+
+<span class="n">p</span><span class="o">.</span><span class="n">patches</span><span class="p">(</span><span class="s">'x'</span><span class="p">,</span> <span class="s">'y'</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+         <span class="n">fill_color</span><span class="o">=</span><span class="s">'color'</span><span class="p">,</span> <span class="n">fill_alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+         <span class="n">line_color</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">hover</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="n">HoverTool</span><span class="p">)</span>
+<span class="n">hover</span><span class="o">.</span><span class="n">point_policy</span> <span class="o">=</span> <span class="s">'follow_mouse'</span>
+<span class="n">hover</span><span class="o">.</span><span class="n">tooltips</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s">"Name"</span><span class="p">,</span> <span class="s">"@name"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"Homicide rate"</span><span class="p">,</span> <span class="s">"@rate"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"Class"</span><span class="p">,</span><span class="s">"@classid"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"(Long, Lat)"</span><span class="p">,</span> <span class="s">"($x, $y)"</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<span class="n">output_file</span><span class="p">(</span><span class="s">"hr90.html"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"hr90.py example"</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Exercise 2</span>
+<span class="n">mb10</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">Maximum_Breaks</span><span class="p">(</span><span class="n">HR90</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="n">mb10</span><span class="o">.</span><span class="n">yb</span>
+
+<span class="c"># palettes from https://github.com/bokeh/bokeh/blob/master/bokeh/palettes.py</span>
+<span class="n">colors10</span> <span class="o">=</span><span class="p">[</span><span class="s">'#000000'</span><span class="p">,</span> <span class="s">'#1c1c1c'</span><span class="p">,</span> <span class="s">'#383838'</span><span class="p">,</span> <span class="s">'#555555'</span><span class="p">,</span> <span class="s">'#717171'</span><span class="p">,</span> <span class="s">'#8d8d8d'</span><span class="p">,</span> <span class="s">'#aaaaaa'</span><span class="p">,</span> <span class="s">'#c6c6c6'</span><span class="p">,</span> <span class="s">'#e2e2e2'</span><span class="p">,</span> <span class="s">'#ffffff'</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors10</span><span class="p">[</span><span class="mi">9</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]</span> <span class="c"># reverse the colors lighter to darker</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">tx</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span>
+        <span class="n">rate</span><span class="o">=</span><span class="n">HR90</span><span class="p">,</span>
+        <span class="n">classid</span><span class="o">=</span><span class="n">classes</span>
+    <span class="p">))</span>
+
+<span class="n">TOOLS</span> <span class="o">=</span> <span class="s">"pan, wheel_zoom, box_zoom, reset, hover, save"</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">"Texas Homicide 1990 (Maximum Breaks k=10)"</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">TOOLS</span><span class="p">,</span>
+          <span class="n">plot_width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+
+<span class="n">p</span><span class="o">.</span><span class="n">patches</span><span class="p">(</span><span class="s">'x'</span><span class="p">,</span> <span class="s">'y'</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+         <span class="n">fill_color</span><span class="o">=</span><span class="s">'color'</span><span class="p">,</span> <span class="n">fill_alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+         <span class="n">line_color</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">hover</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="n">HoverTool</span><span class="p">)</span>
+<span class="n">hover</span><span class="o">.</span><span class="n">point_policy</span> <span class="o">=</span> <span class="s">'follow_mouse'</span>
+<span class="n">hover</span><span class="o">.</span><span class="n">tooltips</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s">"Name"</span><span class="p">,</span> <span class="s">"@name"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"Homicide rate"</span><span class="p">,</span> <span class="s">"@rate"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"Class"</span><span class="p">,</span><span class="s">"@classid"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">"(Long, Lat)"</span><span class="p">,</span> <span class="s">"($x, $y)"</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<span class="n">output_file</span><span class="p">(</span><span class="s">"hr90.html"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"hr90.py example"</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mb10</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+<div class="cell code_cell">
+  <div class="input_area">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ps</span><span class="o">.</span><span class="n">esda</span><span class="o">.</span><span class="n">mapclassify</span><span class="err">??</span>
+
+</code></pre></div>    </div>
+  </div>
+
+</div>
+
+
+              <nav class="c-page__nav">
+  
+    
+    <a id="js-page__nav__prev" class="c-page__nav__prev" href="/processing/08_routes">
+      〈 <span class="u-margin-right-tiny"></span> Geoprocessing Exercise
+    </a>
+  
+
+  
+    
+    <a id="js-page__nav__next" class="c-page__nav__next" href="/esda/intro">
+      Exploratory Spatial Data Analysis <span class="u-margin-right-tiny"></span> 〉
+    </a>
+  
+</nav>
+
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+  </body>
+</html>
