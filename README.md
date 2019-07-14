@@ -1,5 +1,7 @@
 # Spatial Data Analysis with PySAL @NARSC2018
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sjsrey/pysalnarsc18/master)
+
 ### Instructors
 
 - [Sergio Rey](http://sergerey.org) - University of California, Riverside
